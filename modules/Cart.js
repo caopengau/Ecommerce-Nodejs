@@ -1,4 +1,4 @@
-const cartModel = require('../models/Cart')
+const cartModel = require('../models/Cart');
 
 class Cart {
   constructor(oldCart) {
@@ -15,10 +15,10 @@ class Cart {
     }
     storedItem.qty++;
     storedItem.price = parseFloat((storedItem.item.price * storedItem.qty).toFixed(2));
-    this.items[id]=storedItem
+    this.items[id]=storedItem;
     this.totalQty++;
     this.totalPrice += storedItem.item.price;
-    this.totalPrice = parseFloat(this.totalPrice.toFixed(2))
+    this.totalPrice = parseFloat(this.totalPrice.toFixed(2));
     return this
   }
 
@@ -28,17 +28,17 @@ class Cart {
       totalQty: this.totalQty,
       totalPrice: this.totalPrice,
       userId: this.userId
-    })
+    });
     return newCart
   }
 
   decreaseQty(id) {
     this.items[id].qty--;
     this.items[id].price -= this.items[id].item.price;
-    this.items[id].price = parseFloat(this.items[id].price.toFixed(2))
+    this.items[id].price = parseFloat(this.items[id].price.toFixed(2));
     this.totalQty--;
-    this.totalPrice -= this.items[id].item.price
-    this.totalPrice = parseFloat(this.totalPrice.toFixed(2))
+    this.totalPrice -= this.items[id].item.price;
+    this.totalPrice = parseFloat(this.totalPrice.toFixed(2));
     if (this.items[id].qty <= 0) {
       delete this.items[id];
     }
@@ -48,10 +48,10 @@ class Cart {
   increaseQty(id) {
     this.items[id].qty++;
     this.items[id].price += this.items[id].item.price;
-    this.items[id].price = parseFloat(this.items[id].price.toFixed(2))
+    this.items[id].price = parseFloat(this.items[id].price.toFixed(2));
     this.totalQty++;
-    this.totalPrice += this.items[id].item.price
-    this.totalPrice = parseFloat(this.totalPrice.toFixed(2))
+    this.totalPrice += this.items[id].item.price;
+    this.totalPrice = parseFloat(this.totalPrice.toFixed(2));
     return this
   }
 
@@ -64,4 +64,4 @@ class Cart {
   }
 }
 
-module.exports = Cart
+module.exports = Cart;

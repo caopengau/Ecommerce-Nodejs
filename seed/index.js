@@ -4,7 +4,7 @@ var Department = require('../models/Department');
 var Product = require('../models/Product');
 var Variant = require('../models/Variant');
 var mongoose = require('mongoose');
-const mongoConfig = require('../configs/mongo-config')
+const mongoConfig = require('../configs/mongo-config');
 //mongoose.connect('mongodb://localhost/shoppingApp');
 //mongoose.connect('mongodb://localhost/myShoppingApp3', { useNewUrlParser: true, useCreateIndex: true, });
 mongoose.connect(mongoConfig, { useNewUrlParser: true, useCreateIndex: true, });
@@ -27,7 +27,7 @@ var categories =
     new Category({
       categoryName: 'Jackets'
     })
-  ]
+  ];
 
 for (let i = 0; i < categories.length; i++) {
   categories[i].save(function (e, r) {
@@ -48,7 +48,7 @@ var departments =
       departmentName: 'Men',
       categories: 'Knitwear,Jeans,Jackets'
     })
-  ]
+  ];
 
 for (let i = 0; i < departments.length; i++) {
   departments[i].save(function (e, r) {

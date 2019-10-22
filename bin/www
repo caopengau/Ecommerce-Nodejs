@@ -7,7 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('myapp:server');
 var http = require('http');
-var PORT = process.argv[2]&&process.argv[2].slice(-4)
+var PORT = process.argv[2]&&process.argv[2].slice(-4);
 
 /**
  * Get port from environment and store in Express.

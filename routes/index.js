@@ -1,20 +1,20 @@
 var express = require('express');
 var router = express.Router();
-const ensureAuthenticated = require('../modules/ensureAuthenticated')
-const Product = require('../models/Product')
-const Variant = require('../models/Variant')
-const Department = require('../models/Department')
-const Category = require('../models/Category')
-const TypedError = require('../modules/ErrorHandler')
+const ensureAuthenticated = require('../modules/ensureAuthenticated');
+const Product = require('../models/Product');
+const Variant = require('../models/Variant');
+const Department = require('../models/Department');
+const Category = require('../models/Category');
+const TypedError = require('../modules/ErrorHandler');
 const Cart = require('../models/Cart');
-const CartClass = require('../modules/Cart')
-const paypal_config = require('../configs/paypal-config')
-const paypal = require('paypal-rest-sdk')
+const CartClass = require('../modules/Cart');
+const paypal_config = require('../configs/paypal-config');
+const paypal = require('paypal-rest-sdk');
 
 
 //GET /products
 router.get('/products', function (req, res, next) {
-  const { query, order } = categorizeQueryString(req.query)
+  const { query, order } = categorizeQueryString(req.query);
   Product.getAllProducts(query, order, function (e, products) {
     if (e) {
       e.status = 406; return next(e);
@@ -41,10 +41,10 @@ router.get('/products/:id', function (req, res, next) {
 
 //GET /variants
 router.get('/variants', function (req, res, next) {
-  let { productId } = req.query
+  let { productId } = req.query;
   if (productId) {
     Variant.getVariantProductByID(productId, function (err, variants) {
-      if (err) return next(err)
+      if (err) return next(err);
       return res.json({ variants })
     })
   } else {
@@ -57,63 +57,63 @@ router.get('/variants', function (req, res, next) {
       }
     })
   }
-})
+});
 
 //GET /variants/:id
 router.get('/variants/:id', ensureAuthenticated, function (req, res, next) {
-  let id = req.params.id
+  let id = req.params.id;
   if (id) {
     Variant.getVariantByID(id, function (err, variants) {
-      if (err) return next(err)
+      if (err) return next(err);
       res.json({ variants })
     })
   }
-})
+});
 
 //GET /departments
 router.get('/departments', function (req, res, next) {
   Department.getAllDepartments(function (err, d) {
-    if (err) return next(err)
+    if (err) return next(err);
     res.status(200).json({ departments: d })
   })
-})
+});
 
 //GET /categories
 router.get('/categories', function (req, res, next) {
   Category.getAllCategories(function (err, c) {
-    if (err) return next(err)
+    if (err) return next(err);
     res.json({ categories: c })
   })
-})
+});
 
 //GET /search?
 router.get('/search', function (req, res, next) {
-  const { query, order } = categorizeQueryString(req.query)
-  query['department'] = query['query']
-  delete query['query']
+  const { query, order } = categorizeQueryString(req.query);
+  query['department'] = query['query'];
+  delete query['query'];
   Product.getProductByDepartment(query, order, function (err, p) {
-    if (err) return next(err)
+    if (err) return next(err);
     if (p.length > 0) {
       return res.json({ products: p })
     } else {
-      query['category'] = query['department']
-      delete query['department']
+      query['category'] = query['department'];
+      delete query['department'];
       Product.getProductByCategory(query, order, function (err, p) {
-        if (err) return next(err)
+        if (err) return next(err);
         if (p.length > 0) {
           return res.json({ products: p })
         } else {
-          query['title'] = query['category']
-          delete query['category']
+          query['title'] = query['category'];
+          delete query['category'];
           Product.getProductByTitle(query, order, function (err, p) {
-            if (err) return next(err)
+            if (err) return next(err);
             if (p.length > 0) {
               return res.json({ products: p })
             } else {
-              query['id'] = query['title']
-              delete query['title']
+              query['id'] = query['title'];
+              delete query['title'];
               Product.getProductByID(query.id, function (err, p) {
-                let error = new TypedError('search', 404, 'not_found', { message: "no product exist" })
+                let error = new TypedError('search', 404, 'not_found', { message: "no product exist" });
                 if (err) {
                   return next(error)
                 }
@@ -129,52 +129,52 @@ router.get('/search', function (req, res, next) {
       })
     }
   })
-})
+});
 
 // GET filter
 router.get('/filter', function (req, res, next) {
-  let result = {}
-  let query = req.query.query
+  let result = {};
+  let query = req.query.query;
   Product.filterProductByDepartment(query, function (err, p) {
-    if (err) return next(err)
+    if (err) return next(err);
     if (p.length > 0) {
       result['department'] = generateFilterResultArray(p, 'department')
     }
     Product.filterProductByCategory(query, function (err, p) {
-      if (err) return next(err)
+      if (err) return next(err);
       if (p.length > 0) {
         result['category'] = generateFilterResultArray(p, 'category')
       }
       Product.filterProductByTitle(query, function (err, p) {
-        if (err) return next(err)
+        if (err) return next(err);
         if (p.length > 0) {
           result['title'] = generateFilterResultArray(p, 'title')
         }
         if (Object.keys(result).length > 0) {
           return res.json({ filter: result })
         } else {
-          let error = new TypedError('search', 404, 'not_found', { message: "no product exist" })
+          let error = new TypedError('search', 404, 'not_found', { message: "no product exist" });
           return next(error)
         }
       })
     })
   })
-})
+});
 
 //GET /checkout
 router.get('/checkout/:cartId', ensureAuthenticated, function (req, res, next) {
-  const cartId = req.params.cartId
-  const frontURL = 'https://zack-ecommerce-reactjs.herokuapp.com'
+  const cartId = req.params.cartId;
+  const frontURL = 'https://zack-ecommerce-reactjs.herokuapp.com';
   // const frontURL = 'http://localhost:3000'
 
   Cart.getCartById(cartId, function (err, c) {
-    if (err) return next(err)
+    if (err) return next(err);
     if (!c) {
-      let err = new TypedError('/checkout', 400, 'invalid_field', { message: 'cart not found' })
+      let err = new TypedError('/checkout', 400, 'invalid_field', { message: 'cart not found' });
       return next(err)
     }
-    const items_arr = new CartClass(c).generateArray()
-    const paypal_list = []
+    const items_arr = new CartClass(c).generateArray();
+    const paypal_list = [];
     for (const i of items_arr) {
       paypal_list.push({
         "name": i.item.title,
@@ -202,7 +202,7 @@ router.get('/checkout/:cartId', ensureAuthenticated, function (req, res, next) {
         },
         "description": "This is the payment description."
       }]
-    }
+    };
     paypal.configure(paypal_config);
     paypal.payment.create(create_payment_json, function (error, payment) {
       if (error) {
@@ -218,7 +218,7 @@ router.get('/checkout/:cartId', ensureAuthenticated, function (req, res, next) {
       }
     });
   })
-})
+});
 
 //GET /payment/success
 router.get('/payment/success', ensureAuthenticated, function (req, res, next) {
@@ -238,10 +238,10 @@ router.get('/payment/success', ensureAuthenticated, function (req, res, next) {
       }
     }
   })
-})
+});
 
 function generateFilterResultArray(products, targetProp) {
-  let result_set = new Set()
+  let result_set = new Set();
   for (const p of products) {
     result_set.add(p[targetProp])
   }
@@ -249,24 +249,24 @@ function generateFilterResultArray(products, targetProp) {
 }
 
 function categorizeQueryString(queryObj) {
-  let query = {}
-  let order = {}
+  let query = {};
+  let order = {};
   //extract query, order, filter value
   for (const i in queryObj) {
     if (queryObj[i]) {
       // extract order
       if (i === 'order') {
-        order['sort'] = queryObj[i]
+        order['sort'] = queryObj[i];
         continue
       }
       // extract range
       if (i === 'range') {
-        let range_arr = []
-        let query_arr = []
+        let range_arr = [];
+        let query_arr = [];
         // multi ranges
         if (queryObj[i].constructor === Array) {
           for (const r of queryObj[i]) {
-            range_arr = r.split('-')
+            range_arr = r.split('-');
             query_arr.push({
               price: { $gt: range_arr[0], $lt: range_arr[1] }
             })
@@ -274,13 +274,13 @@ function categorizeQueryString(queryObj) {
         }
         // one range
         if (queryObj[i].constructor === String) {
-          range_arr = queryObj[i].split('-')
+          range_arr = queryObj[i].split('-');
           query_arr.push({
             price: { $gt: range_arr[0], $lt: range_arr[1] }
           })
         }
-        Object.assign(query, { $or: query_arr })
-        delete query[i]
+        Object.assign(query, { $or: query_arr });
+        delete query[i];
         continue
       }
       query[i] = queryObj[i]

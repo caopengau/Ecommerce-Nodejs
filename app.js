@@ -1,24 +1,24 @@
 var createError = require('http-errors');
 var path = require('path');
 var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
 var logger = require('morgan');
 var express = require('express');
 var mongoose = require('mongoose');
-var cors = require('cors')
+var cors = require('cors');
 var expressValidator  = require('express-validator');//req.checkbody()
-const mongoConfig = require('./configs/mongo-config')
+const mongoConfig = require('./configs/mongo-config');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 //mongodb://heroku_8bd94qrf:irstf0rv1ds970eebtislm0apf@ds029638.mlab.com:29638/heroku_8bd94qrf
 mongoose.connect(mongoConfig, { useNewUrlParser: true, useCreateIndex: true, },function(error){
-  if(error) throw error
+  if(error) throw error;
     console.log(`connect mongodb success`);
 });
 
-var app = express()
-app.use(cors())
+var app = express();
+app.use(cors());
 
 // Express validator
 app.use(expressValidator({

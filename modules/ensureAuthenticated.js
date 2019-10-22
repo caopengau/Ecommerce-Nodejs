@@ -1,8 +1,8 @@
-const jwt = require('jsonwebtoken')
-const config = require('../configs/jwt-config')
-const TypedError = require('./ErrorHandler')
+const jwt = require('jsonwebtoken');
+const config = require('../configs/jwt-config');
+const TypedError = require('./ErrorHandler');
 function ensureAuthenticated(req, res, next) {
-  let token = ''
+  let token = '';
   if (req.headers['x-access-token'] || req.headers['authorization']) {
     token = req.headers['x-access-token'] || req.headers['authorization']
   }
@@ -15,7 +15,7 @@ function ensureAuthenticated(req, res, next) {
       if (err) {
         let err = new TypedError('token', 401, 'invalid_field', {
           message: "Token is not valid"
-        })
+        });
         return next(err)
       } else {
         //bind on request
@@ -27,9 +27,8 @@ function ensureAuthenticated(req, res, next) {
   } else {
     let err = new TypedError('token', 401, 'invalid_field', {
       message: "Token is not supplied"
-    })
+    });
     return next(err)
   }
-};
-
-module.exports = ensureAuthenticated
+}
+module.exports = ensureAuthenticated;

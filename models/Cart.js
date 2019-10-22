@@ -1,5 +1,5 @@
 
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 CartSchema = mongoose.Schema({
   items: {
@@ -14,23 +14,23 @@ CartSchema = mongoose.Schema({
   userId: {
     type: String
   }
-})
+});
 
-var Cart = module.exports = mongoose.model('Cart', CartSchema)
+var Cart = module.exports = mongoose.model('Cart', CartSchema);
 
 module.exports.getCartByUserId = function (uid, callback) {
-  let query = { userId: uid }
+  let query = { userId: uid };
   Cart.find(query, callback)
-}
+};
 
 module.exports.getCartById = function (id, callback) {
   Cart.findById(id, callback)
-}
+};
 
 module.exports.updateCartByUserId = function (userId, newCart, callback) {
-  let query = { userId: userId }
+  let query = { userId: userId };
   Cart.find(query, function (err, c) {
-    if (err) throw err
+    if (err) throw err;
 
     //exist cart in databse
     if (c.length > 0) {
@@ -52,7 +52,7 @@ module.exports.updateCartByUserId = function (userId, newCart, callback) {
       newCart.save(callback)
     }
   })
-}
+};
 
 module.exports.updateCartByCartId = function (cartId, newCart, callback) {
   Cart.findById(
@@ -62,10 +62,10 @@ module.exports.updateCartByCartId = function (cartId, newCart, callback) {
     },
     callback
   )
-}
+};
 
 
 
 module.exports.createCart = function (newCart, callback) {
   newCart.save(callback)
-}
+};

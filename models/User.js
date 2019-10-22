@@ -30,24 +30,24 @@ module.exports.createUser = function (newUser, callback) {
             newUser.save(callback);
         });
     });
-}
+};
 
 module.exports.getUserByEmail = function (email, callback) {
     var query = { email: email };
     User.findOne(query, callback);
-}
+};
 
 
 module.exports.getUserById = function (id, callback) {
     User.findById(id, callback);
-}
+};
 module.exports.comparePassword = function (givenPassword, hash, callback) {
     bcrypt.compare(givenPassword, hash, function (err, isMatch) {
         if (err) throw err;
         callback(null, isMatch);
     });
-}
+};
 
 module.exports.getAllUsers = function (callback) {
     User.find(callback)
-}
+};
