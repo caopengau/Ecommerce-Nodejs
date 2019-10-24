@@ -16,7 +16,7 @@ CartSchema = mongoose.Schema({
   }
 });
 
-var Cart = module.exports = mongoose.model('Cart', CartSchema);
+var Cart = module.exports = mongoose.model('carts', CartSchema);
 
 module.exports.getCartByUserId = function (uid, callback) {
   let query = { userId: uid };

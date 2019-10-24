@@ -2,6 +2,9 @@
 var mongoose = require('mongoose');
 
 var productSchema = mongoose.Schema({
+  _id:{
+    type: String
+  },
   imagePath: {
     type: String
   },
@@ -31,7 +34,7 @@ var productSchema = mongoose.Schema({
   }
 });
 
-var Product = module.exports = mongoose.model('Product', productSchema);
+var Product = module.exports = mongoose.model('products', productSchema);
 
 module.exports.getAllProducts = function (query, sort, callback) {
   Product.find(query, null, sort, callback)

@@ -25,7 +25,7 @@ var variantSchema  = mongoose.Schema({
     }
 });
 
-var Variant = module.exports = mongoose.model('Variant', variantSchema);
+var Variant = module.exports = mongoose.model('variants', variantSchema);
 
 module.exports.getVariantByID = function(id, callback){
     Variant.findById(id, callback);

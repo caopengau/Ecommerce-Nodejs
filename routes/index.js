@@ -34,7 +34,7 @@ router.get('/products/:id', function (req, res, next) {
       e.status = 404; return next(e);
     }
     else {
-      res.json({ product: item })
+      return res.json({ product: item });
     }
   });
 });
